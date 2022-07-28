@@ -210,6 +210,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 makeBrick(x: x, y: y, color: colors[r])
             }
         }
-       
+    }
+    override func update(_ currentTime: TimeInterval) {
+        if abs(ball.physicsBody!.velocity.dx) < 100 {
+            // ball has stalled in x direction so kick it in a random direction
+            ball.physicsBody?.applyImpulse(CGVector(dx: Int.random(in: -3...3), dy: 0))
+        }
+        if abs(ball.physicsBody!.velocity.dy) < 100 {
+            // ball has stalled in x direction so kick it in a random direction
+            ball.physicsBody?.applyImpulse(CGVector(dx: 0, dy: Int.random(in: -3...3)))
+        }
     }
 }
