@@ -11,6 +11,12 @@ var ball = SKShapeNode()
 var paddle = SKSpriteNode()
 var brick = SKSpriteNode()
 var loseZone = SKSpriteNode()
+var playLabel = SKLabelNode()
+var livesLabel = SKLabelNode()
+var scoreLabel = SKLabelNode()
+var playingGame = false
+var score = 0
+var lives = 3
 class GameScene: SKScene, SKPhysicsContactDelegate {
         override func didMove(to view: SKView) {
             physicsWorld.contactDelegate = self
@@ -99,6 +105,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         for touch in touches {
             let location = touch.location(in: self)
             paddle.position.x = location.x
+        }
+    }
+    func didBegin(_ contact: SKPhysicsContact) {
+        if contact.bodyA.node?.name == "brick" ||
+            contact.bodyB.node?.name == "brick" {
+            print("You win!!")
+            brick.removeFromParent()
+            ball.removeFromParent()
+        }
+        if contact.bodyA.node?.name == "loseZone" ||
+            contact.bodyB.node?.name == "loseZone" {
+            print("You lose!")
+            ball.removeFromParent()
         }
     }
 }
