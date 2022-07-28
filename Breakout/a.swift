@@ -14,6 +14,7 @@ var loseZone = SKSpriteNode()
 var playLabel = SKLabelNode()
 var livesLabel = SKLabelNode()
 var scoreLabel = SKLabelNode()
+var hardlabel = SKLabelNode()
 var playingGame = false
 var score = 0
 var lives = 3
@@ -28,32 +29,34 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         makeLabels()
         makeBricks()
     }
+    
     func resetGame() {
         makeBall()
         makePaddle()
         updateLabels()
-        
     }
+    
     func createBackground() {
-        let stars = SKTexture(imageNamed: "Stars")
+        let stars = SKTexture(imageNamed: "thestars")
         for i in 0...1 {
             let starsBackground = SKSpriteNode(texture: stars)
             starsBackground.zPosition = -1
             starsBackground.position = CGPoint(x: 0, y: starsBackground.size.height * CGFloat(i))
             addChild(starsBackground)
-            let moveDown = SKAction.moveBy(x: 0, y: -starsBackground.size.height, duration: 20)
+            let moveDown = SKAction.moveBy(x: 0, y: -starsBackground.size.height, duration: 50)
             let moveReset = SKAction.moveBy(x: 0, y:  starsBackground.size.height, duration: 0)
             let moveLoop = SKAction.sequence([moveDown, moveReset])
             let moveForever = SKAction.repeatForever(moveLoop)
             starsBackground.run(moveForever)
         }
     }
+    
     func makeBall() {
         ball.removeFromParent()
         ball = SKShapeNode(circleOfRadius: 10)
         ball.position = CGPoint(x: frame.midX, y: frame.midY)
         ball.strokeColor = .blue
-        ball.fillColor = .yellow
+        ball.fillColor = .white
         ball.name = "ball"
         
         ball.physicsBody = SKPhysicsBody(circleOfRadius: 10)
@@ -112,7 +115,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                         playingGame = true
                         node.alpha = 0
                         score = 0
-                        lives = 3
+                        lives = 2
                         updateLabels()
                         kickBall()
                     }
@@ -141,6 +144,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 }
                 else if brick.color == .orange {
                     brick.color = .yellow
+                }
+                else if brick.color == .yellow {
+                    brick.color = .green
                 }
                 else {
                     brick.removeFromParent()
@@ -207,8 +213,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         let count = Int(frame.width) / 55 // bricks per row
         let xOffset = (Int(frame.width) - (count * 55)) / 2 + Int(frame.minX) + 25
-        let colors: [UIColor] = [.red, .orange, .yellow]
-        for r in 0..<3 {
+        let colors: [UIColor] = [.red, .orange, .yellow, .green]
+        for r in 0..<4 {
             let y = Int(frame.maxY) - 65 - (r * 25)
             for i in 0..<count {
                 let x = i * 55 + xOffset
