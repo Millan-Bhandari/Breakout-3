@@ -31,6 +31,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func resetGame() {
         makeBall()
         makePaddle()
+        updateLabels()
         
     }
     func createBackground() {
@@ -51,7 +52,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         ball.removeFromParent()
         ball = SKShapeNode(circleOfRadius: 10)
         ball.position = CGPoint(x: frame.midX, y: frame.midY)
-        ball.strokeColor = .black
+        ball.strokeColor = .blue
         ball.fillColor = .yellow
         ball.name = "ball"
         
@@ -93,7 +94,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     func kickBall() {
         ball.physicsBody?.isDynamic = true
-        ball.physicsBody?.applyImpulse(CGVector(dx: 3, dy: 5))
+        ball.physicsBody?.applyImpulse(CGVector(dx: Int.random(in: -5...5), dy: 5))
     }
     func updateLabels() {
         scoreLabel.text = "Score: \(score)"
@@ -132,12 +133,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if contact.bodyA.node == brick ||
                 contact.bodyB.node == brick {
                 score += 1
+                ball.physicsBody!.velocity.dx *= CGFloat(1.04)
+                ball.physicsBody!.velocity.dy *= CGFloat(1.04)
                 updateLabels()
-                if brick.color == .blue {
+                if brick.color == .red {
                     brick.color = .orange
                 }
                 else if brick.color == .orange {
-                    brick.color = .green
+                    brick.color = .yellow
                 }
                 else {
                     brick.removeFromParent()
@@ -158,6 +161,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
             else {
                 gameOver(winner: false)
+                makeBricks()
             }
         }
     }
@@ -172,6 +176,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         livesLabel.fontSize = 18
         livesLabel.fontColor = .black
         livesLabel.position = CGPoint(x: frame.minX + 50, y: frame.minY + 18)
+        livesLabel.fontName =  "Arial"
         addChild(livesLabel)
         
         scoreLabel.fontSize = 18
@@ -202,7 +207,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         let count = Int(frame.width) / 55 // bricks per row
         let xOffset = (Int(frame.width) - (count * 55)) / 2 + Int(frame.minX) + 25
-        let colors: [UIColor] = [.blue, .orange, .green]
+        let colors: [UIColor] = [.red, .orange, .yellow]
         for r in 0..<3 {
             let y = Int(frame.maxY) - 65 - (r * 25)
             for i in 0..<count {
